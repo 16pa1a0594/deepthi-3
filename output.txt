@@ -1,0 +1,244 @@
+----------------------------------------------------------------------------------------------------------------------------
+  PART-1
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ sudo -i -u postgres
+[sudo] password for vit: 
+postgres@vit-HP-Pro-3090-MT:~$ psql
+psql (9.5.12)
+Type "help" for help.
+postgres=# create database news;
+ERROR:  database "news" already exists
+postgres=# /c news
+postgres-# \c news
+You are now connected to database "news" as user "postgres".
+news-# \q
+----------------------------------------------------------------------------------------------------------------------------
+           PART-2
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Checking if box 'hashicorp/precise64' is up to date...
+==> default: VirtualBox VM is already running.
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant ssh
+Welcome to Ubuntu 12.04 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+Run 'do-release-upgrade' to upgrade to it.
+New release '14.04.5 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+Welcome to your Vagrant-built virtual machine.
+Last login: Fri May 25 04:46:20 2018 from 10.0.2.2
+vagrant@precise64:~$ cd /vagrant
+vagrant@precise64:/vagrant$ ls
+login.py  newsdata.sql  log.py  Vagrantfile
+vagrant@precise64:/vagrant$ sudo -i -u vagrant
+vagrant@precise64:~$ ls
+postinstall.sh
+vagrant@precise64:~$ psql -d news -f newsdata.sql;
+newsdata.sql: No such file or directory
+vagrant@precise64:~$ psql -d news -f newsdata.sql 
+newsdata.sql: No such file or directory
+vagrant@precise64:~$ exit
+logout
+vagrant@precise64:/vagrant$ psql -d news -f newsdata.sql
+SET
+psql:newsdata.sql:6: ERROR:  unrecognized configuration parameter "lock_timeout"
+SET
+SET
+SET
+SET
+SET
+SET
+SET
+psql:newsdata.sql:31: ERROR:  relation "articles" already exists
+ALTER TABLE
+psql:newsdata.sql:45: ERROR:  relation "articles_id_seq" already exists
+ALTER TABLE
+ALTER SEQUENCE
+psql:newsdata.sql:65: ERROR:  relation "authors" already exists
+ALTER TABLE
+psql:newsdata.sql:79: ERROR:  relation "authors_id_seq" already exists
+ALTER TABLE
+ALTER SEQUENCE
+psql:newsdata.sql:102: ERROR:  relation "log" already exists
+ALTER TABLE
+psql:newsdata.sql:116: ERROR:  relation "log_id_seq" already exists
+ALTER TABLE
+ALTER SEQUENCE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+psql:newsdata.sql:162: ERROR:  duplicate key value violates unique constraint "articles_pkey"
+DETAIL:  Key (id)=(23) already exists.
+CONTEXT:  COPY articles, line 1: "3	Bad things gone, say good people	bad-things-gone	All bad things have gone away, according to a pol..."
+ setval 
+--------
+     30
+(1 row)
+
+psql:newsdata.sql:181: ERROR:  duplicate key value violates unique constraint "authors_pkey"
+DETAIL:  Key (id)=(1) already exists.
+CONTEXT:  COPY authors, line 1: "Ursula La Multa	Ursula La Multa is an expert on bears, bear abundance, and bear accessories.	1"
+ setval 
+--------
+      4
+(1 row)
+
+psql:newsdata.sql:1677931: ERROR:  duplicate key value violates unique constraint "log_pkey"
+DETAIL:  Key (id)=(1678923) already exists.
+CONTEXT:  COPY log, line 1: "/	198.51.100.195	GET	200 OK	2016-07-01 00:00:00-07	1678923"
+ setval  
+---------
+ 3356657
+(1 row)
+
+psql:newsdata.sql:1677946: ERROR:  multiple primary keys for table "articles" are not allowed
+psql:newsdata.sql:1677954: ERROR:  relation "articles_slug_key" already exists
+psql:newsdata.sql:1677962: ERROR:  multiple primary keys for table "authors" are not allowed
+psql:newsdata.sql:1677970: ERROR:  multiple primary keys for table "log" are not allowed
+psql:newsdata.sql:1677978: ERROR:  constraint "articles_author_fkey" for relation "articles" already exists
+vagrant@precise64:/vagrant$ 
+----------------------------------------------------------------------------------------------------------------------------
+         PART-3
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ sudo -i -u postgres
+[sudo] password for vit: 
+postgres@vit-HP-Pro-3090-MT:~$ psql
+psql (9.5.12)
+Type "help" for help.
+
+postgres=# create role vagrant password 'vagrant';
+CREATE ROLE
+postgres=# \du
+postgres=# alter role vagrant Superuser;
+ALTER ROLE
+postgres=# alter role createrole;
+ERROR:  role "createrole" does not exist
+postgres=# \du
+postgres=# 
+postgres=# alter role vagrant createrole;
+ALTER ROLE
+postgres=# alter role vagrant createdb;
+ALTER ROLE
+postgres=# \q
+postgres@vit-HP-Pro-3090-MT:~$ cd /vagrant
+-bash: cd: /vagrant: No such file or directory
+postgres@vit-HP-Pro-3090-MT:~$ cd/ vagrant
+-bash: cd/: No such file or directory
+postgres@vit-HP-Pro-3090-MT:~$ sudo -i -u vagrant
+sudo: unknown user: vagrant
+sudo: unable to initialize policy plugin
+postgres@vit-HP-Pro-3090-MT:~$ exit
+logout
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ cd /vagrant
+bash: cd: /vagrant: No such file or directory
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ sudo -i -u vagrant
+sudo: unknown user: vagrant
+sudo: unable to initialize policy plugin
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Checking if box 'hashicorp/precise64' is up to date...
+==> default: Clearing any previously set forwarded ports...
+==> default: Clearing any previously set network interfaces...
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+==> default: Forwarding ports...
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Booting VM...
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+    default: SSH auth method: private key
+==> default: Machine booted and ready!
+==> default: Checking for guest additions in VM...
+    default: The guest additions on this VM do not match the installed version of
+    default: VirtualBox! In most cases this is fine, but in rare cases it can
+    default: prevent things such as shared folders from working properly. If you see
+    default: shared folder errors, please make sure the guest additions within the
+    default: virtual machine match the version of VirtualBox you have installed on
+    default: your host and reload your VM.
+    default: 
+    default: Guest Additions Version: 4.2.0
+    default: VirtualBox Version: 5.1
+==> default: Mounting shared folders...
+    default: /vagrant => /home/vit/Desktop/vm_vagrant
+==> default: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> default: flag to force provisioning. Provisioners marked to run always will still run.
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant ssh
+Welcome to Ubuntu 12.04 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+New release '14.04.5 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant up
+16
+Bringing machine 'default' up with 'virtualbox' provider...
+17
+==> default: Checking if box 'hashicorp/precise64' is up to date...
+18
+==> default: VirtualBox VM is already running.
+19
+vit@vit-HP-Pro-3090-MT:~/Desktop/vm_vagrant$ vagrant ssh
+20
+Welcome to Ubuntu 12.04 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+21
+​
+22
+ * Documentation:  https://help.ubuntu.com/
+23
+New release '14.04.5 LTS' available.
+24
+Run 'do-release-upgrade' to upgrade to it.
+25
+​
+26
+Welcome to your Vagrant-built virtual machine.
+27
+Last login: Fri May 25 04:46:20 2018 from 10.0.2.2
+28
+vagrant@precise64:~$ cd /vagrant
+29
+vagrant@precise64:/vagrant$ ls
+30
+login.py  newsdata.sql  log.py  Vagrantfile
+31
+vagrant@precise64:/vagrant$ sudo -i -u vagrant
+32
+vagrant@precise64:~$ ls
+33
+postinstall.sh
+34
+vagrant@precise64:~$ psql -d news -f newsdata.sql;
+35
+newsdata.sql: No such file or directory
+36
+vagrant@precise64:~$ psql -d news -f newsdata.sql 
+Welcome to your Vagrant-built virtual machine.
+Last login: Thu May 24 11:07:40 2018 from 10.0.2.2
+vagrant@precise64:~$ cd /vagrant
+vagrant@precise64:/vagrant$ ls
+login.py  newsdata.sql  pk.py  Vagrantfile
+vagrant@precise64:/vagrant$ sudo -i -u postgres
+postgres@precise64:~$ exit
+logout
+vagrant@precise64:/vagrant$ sudo -i -u vagrant
+vagrant@precise64:~$ ls
+postinstall.sh
+vagrant@precise64:~$ exit
+logout
+vagrant@precise64:/vagrant$ ls
+login.py  newsdata.sql  log.py  Vagrantfile
+vagrant@precise64:/vagrant$ python log.py
+
+TOP 3 articles of all time
+(1) "Candidate is jerk, alleges rival" with 338647 views
+(2) "Bears love berries, alleges bear" with 253801 views
+(3) "Bad things gone, say good people" with 170098 views
+
+Top authors of all time
+(1) Ursula La Multa with 507594 views
+(2) Rudolf von Treppenwitz with 423457 views
+(3) Anonymous Contributor with 170098 views
+
+Days with more than one percentage of bad requests
+July 17, 2016 -- 2.3% errors
+vagrant@precise64:/vagrant$ 
+----------------------------------------------------------------------------------------------------------------------------
